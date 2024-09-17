@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.arturocode.moviemanagement.persistence.util.MovieGenre;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,9 @@ public class Movie {
     private String title;
 
     private String director;
-    private String genre;
+
+    @Enumerated(EnumType.STRING)
+    private MovieGenre genre;
 
     @Column(name = "release_year")
     private Integer releaseYear;
