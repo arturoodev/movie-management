@@ -13,6 +13,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByUsername(String username);
 
+    List<User> findByUsernameContaining(String username);
+
     @Modifying
-    void deleteByUsername(String username);
+    int deleteByUsername(String username);
 }
