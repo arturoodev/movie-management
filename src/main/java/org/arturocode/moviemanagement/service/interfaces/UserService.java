@@ -1,19 +1,22 @@
 package org.arturocode.moviemanagement.service.interfaces;
 
 import org.arturocode.moviemanagement.persistence.entity.User;
+import org.arturocode.moviemanagement.presentation.dto.request.SaveUser;
+import org.arturocode.moviemanagement.presentation.dto.response.GetUser;
 
 import java.util.List;
 
 public interface UserService {
-    List<User> finaAll();
 
-    List<User> findAllByUsername(String username);
+    List<GetUser> finaAll();
 
-    User findOneByUsername(String username);
+    List<GetUser> findAllByUsername(String username);
 
-    User createOne(User user);
+    GetUser findOneByUsername(String username);
 
-    User updateOneByUsername(String username, User user);
+    GetUser createOne(SaveUser saveDto);
+
+    GetUser updateOneByUsername(String username, SaveUser saveDto);
 
     void deleteOneByUsername(String username);
 }

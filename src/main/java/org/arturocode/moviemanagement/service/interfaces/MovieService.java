@@ -2,23 +2,25 @@ package org.arturocode.moviemanagement.service.interfaces;
 
 import org.arturocode.moviemanagement.persistence.entity.Movie;
 import org.arturocode.moviemanagement.persistence.util.MovieGenre;
+import org.arturocode.moviemanagement.presentation.dto.request.SaveMovie;
+import org.arturocode.moviemanagement.presentation.dto.response.GetMovie;
 
 import java.util.List;
 
 public interface MovieService {
-    List<Movie> findAll();
+    List<GetMovie> findAll();
 
-    List<Movie> findAllByTitle(String title);
+    List<GetMovie> findAllByTitle(String title);
 
-    List<Movie> findAllByGenre(MovieGenre genre);
+    List<GetMovie> findAllByGenre(MovieGenre genre);
 
-    List<Movie> findAllByGenreAndTitle(MovieGenre genre, String title);
+    List<GetMovie> findAllByGenreAndTitle(MovieGenre genre, String title);
 
-    Movie findOneById(Long id);
+    GetMovie findOneById(Long id);
 
-    Movie createOne(Movie movie);
+    GetMovie createOne(SaveMovie saveDto);
 
-    Movie updateOne(Long id, Movie movie);
+    GetMovie updateOne(Long id, SaveMovie saveDto);
 
     void deleteOne(Long id);
 }

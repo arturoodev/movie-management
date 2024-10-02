@@ -4,9 +4,13 @@ import org.arturocode.moviemanagement.exception.ObjectNotFoundException;
 import org.arturocode.moviemanagement.persistence.entity.Movie;
 import org.arturocode.moviemanagement.persistence.repository.MovieRepository;
 import org.arturocode.moviemanagement.persistence.util.MovieGenre;
+import org.arturocode.moviemanagement.presentation.dto.request.SaveMovie;
+import org.arturocode.moviemanagement.presentation.dto.response.GetMovie;
+import org.arturocode.moviemanagement.presentation.mapper.MovieMapper;
 import org.arturocode.moviemanagement.service.interfaces.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,50 +21,58 @@ public class MovieServiceImpl implements MovieService {
     private MovieRepository movieRepository;
 
     @Override
-    public List<Movie> findAll() {
-        return movieRepository.findAll();
+    public List<GetMovie> findAll() {
+        List<Movie> entities = movieRepository.findAll();
+        return MovieMapper.toGetDtoList(entities);
     }
 
     @Override
-    public List<Movie> findAllByTitle(String title) {
-        return movieRepository.findByTitleContaining(title);
+    public List<GetMovie> findAllByTitle(String title) {
+        List<Movie> entities = movieRepository.findByTitleContaining(title);
+        return MovieMapper.toGetDtoList(entities);
     }
 
     @Override
-    public List<Movie> findAllByGenre(MovieGenre genre) {
-        return movieRepository.findByGenre(genre);
+    public List<GetMovie> findAllByGenre(MovieGenre genre) {
+        List<Movie> entities = movieRepository.findByGenre(genre);
+        return MovieMapper.toGetDtoList(entities);
     }
 
     @Override
-    public List<Movie> findAllByGenreAndTitle(MovieGenre genre, String title) {
-        return movieRepository.findByGenreAndTitleContaining(genre, title);
+    public List<GetMovie> findAllByGenreAndTitle(MovieGenre genre, String title) {
+        List<Movie> entities = movieRepository.findByGenreAndTitleContaining(genre, title);
+        return MovieMapper.toGetDtoList(entities);
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public Movie findOneById(Long id) {
+    public GetMovie findOneById(Long id) {
+        return MovieMapper.toGetDto(this.finOneEntityById(id));
+    }
+
+    @Transactional(readOnly = true)
+    private Movie finOneEntityById(Long id) {
         return movieRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("[movie: " + Long.toString(id) + "]"));
     }
 
     @Override
-    public Movie createOne(Movie movie) {
-        return movieRepository.save(movie);
+    public GetMovie createOne(SaveMovie saveDto) {
+        Movie newMovie = MovieMapper.toEntity(saveDto);
+        return MovieMapper.toGetDto(movieRepository.save(newMovie));
     }
 
     @Override
-    public Movie updateOne(Long id, Movie newMovie) {
-        Movie oldMovie = this.findOneById(id);
-        oldMovie.setTitle(newMovie.getTitle());
-        oldMovie.setDirector(newMovie.getDirector());
-        oldMovie.setGenre(newMovie.getGenre());
-        oldMovie.setReleaseYear(newMovie.getReleaseYear());
+    public GetMovie updateOne(Long id, SaveMovie saveDto) {
+        Movie oldMovie = this.finOneEntityById(id);
+        MovieMapper.updateEntity(oldMovie, saveDto);
 
-        return movieRepository.save(oldMovie);
+        return MovieMapper.toGetDto(movieRepository.save(oldMovie));
     }
 
     @Override
     public void deleteOne(Long id) {
-        Movie movie = this.findOneById(id);
+        Movie movie = this.finOneEntityById(id);
         movieRepository.delete(movie);
     }
 }

@@ -3,9 +3,13 @@ package org.arturocode.moviemanagement.service.implementation;
 import org.arturocode.moviemanagement.exception.ObjectNotFoundException;
 import org.arturocode.moviemanagement.persistence.entity.User;
 import org.arturocode.moviemanagement.persistence.repository.UserRepository;
+import org.arturocode.moviemanagement.presentation.dto.request.SaveUser;
+import org.arturocode.moviemanagement.presentation.dto.response.GetUser;
+import org.arturocode.moviemanagement.presentation.mapper.UserMapper;
 import org.arturocode.moviemanagement.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,33 +20,41 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public List<User> finaAll() {
-        return userRepository.findAll();
+    public List<GetUser> finaAll() {
+        List<User> entities = userRepository.findAll();
+        return UserMapper.toGetDtoList(entities);
     }
 
     @Override
-    public List<User> findAllByUsername(String username) {
-        return userRepository.findByUsernameContaining(username);
+    public List<GetUser> findAllByUsername(String username) {
+        List<User> entities = userRepository.findByUsernameContaining(username);
+        return UserMapper.toGetDtoList(entities);
     }
 
     @Override
-    public User findOneByUsername(String username) {
+    @Transactional(readOnly = true)
+    public GetUser findOneByUsername(String username) {
+        return UserMapper.toGetDto(this.findOneEntityByUsername(username));
+    }
+
+    @Transactional(readOnly = true)
+    private User findOneEntityByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new ObjectNotFoundException("[movie: " + username + "]"));
     }
 
     @Override
-    public User createOne(User user) {
-        return userRepository.save(user);
+    public GetUser createOne(SaveUser saveDto) {
+        User newUSer = UserMapper.toEntity(saveDto);
+        return UserMapper.toGetDto(userRepository.save(newUSer));
     }
 
     @Override
-    public User updateOneByUsername(String username, User user) {
-        User oldUser = this.findOneByUsername(username);
-        oldUser.setName(user.getName());
-        oldUser.setPassword(user.getPassword());
+    public GetUser updateOneByUsername(String username, SaveUser saveDto) {
+        User oldUser = this.findOneEntityByUsername(username);
+        UserMapper.updateEntity(oldUser, saveDto);
 
-        return userRepository.save(oldUser);
+        return UserMapper.toGetDto(userRepository.save(oldUser));
     }
 
     @Override
