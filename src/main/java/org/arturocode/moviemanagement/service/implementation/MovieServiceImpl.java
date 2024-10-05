@@ -9,8 +9,11 @@ import org.arturocode.moviemanagement.presentation.dto.response.GetMovie;
 import org.arturocode.moviemanagement.presentation.mapper.MovieMapper;
 import org.arturocode.moviemanagement.service.interfaces.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.server.handler.ResponseStatusExceptionHandler;
 
 import java.util.List;
 
@@ -53,7 +56,8 @@ public class MovieServiceImpl implements MovieService {
     @Transactional(readOnly = true)
     private Movie finOneEntityById(Long id) {
         return movieRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("[movie: " + Long.toString(id) + "]"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Movie not found" + id));
+        //.orElseThrow(() -> new ObjectNotFoundException("[movie: " + Long.toString(id) + "]"));
     }
 
     @Override

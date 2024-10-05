@@ -9,8 +9,10 @@ import org.arturocode.moviemanagement.presentation.mapper.UserMapper;
 import org.arturocode.moviemanagement.service.interfaces.UserService;
 import org.arturocode.moviemanagement.service.validator.PasswordValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -41,7 +43,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     private User findOneEntityByUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new ObjectNotFoundException("[movie: " + username + "]"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "User not found" + username));
     }
 
     @Override
