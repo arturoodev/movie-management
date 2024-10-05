@@ -1,6 +1,5 @@
 package org.arturocode.moviemanagement.service.interfaces;
 
-import org.arturocode.moviemanagement.persistence.entity.User;
 import org.arturocode.moviemanagement.presentation.dto.request.SaveUser;
 import org.arturocode.moviemanagement.presentation.dto.response.GetUser;
 

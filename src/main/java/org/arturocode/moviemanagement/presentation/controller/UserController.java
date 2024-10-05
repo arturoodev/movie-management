@@ -1,8 +1,8 @@
 package org.arturocode.moviemanagement.presentation.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.arturocode.moviemanagement.exception.ObjectNotFoundException;
-import org.arturocode.moviemanagement.persistence.entity.User;
 import org.arturocode.moviemanagement.presentation.dto.request.SaveUser;
 import org.arturocode.moviemanagement.presentation.dto.response.GetUser;
 import org.arturocode.moviemanagement.service.interfaces.UserService;
@@ -36,7 +36,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<GetUser> createUser(@RequestBody SaveUser saveDto, HttpServletRequest request) {
+    public ResponseEntity<GetUser> createUser(@Valid @RequestBody SaveUser saveDto, HttpServletRequest request) {
         try {
             GetUser userSaved = userService.createOne(saveDto);
             String baseUrl = request.getHttpServletMapping().toString();
@@ -48,7 +48,7 @@ public class UserController {
     }
 
     @PutMapping("/{username}")
-    public ResponseEntity<GetUser> updateUser(@RequestBody SaveUser saveDto, @PathVariable String username) {
+    public ResponseEntity<GetUser> updateUser(@Valid @RequestBody SaveUser saveDto, @PathVariable String username) {
         try {
             GetUser userSaved = userService.updateOneByUsername(username, saveDto);
             return ResponseEntity.ok(userSaved);

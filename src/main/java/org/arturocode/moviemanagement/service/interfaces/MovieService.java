@@ -1,6 +1,5 @@
 package org.arturocode.moviemanagement.service.interfaces;
 
-import org.arturocode.moviemanagement.persistence.entity.Movie;
 import org.arturocode.moviemanagement.persistence.util.MovieGenre;
 import org.arturocode.moviemanagement.presentation.dto.request.SaveMovie;
 import org.arturocode.moviemanagement.presentation.dto.response.GetMovie;

@@ -7,6 +7,7 @@ import org.arturocode.moviemanagement.presentation.dto.request.SaveUser;
 import org.arturocode.moviemanagement.presentation.dto.response.GetUser;
 import org.arturocode.moviemanagement.presentation.mapper.UserMapper;
 import org.arturocode.moviemanagement.service.interfaces.UserService;
+import org.arturocode.moviemanagement.service.validator.PasswordValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,12 +46,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public GetUser createOne(SaveUser saveDto) {
+        PasswordValidator.validatePassword(saveDto.password(), saveDto.confirmPassword());
         User newUSer = UserMapper.toEntity(saveDto);
         return UserMapper.toGetDto(userRepository.save(newUSer));
     }
 
     @Override
     public GetUser updateOneByUsername(String username, SaveUser saveDto) {
+        PasswordValidator.validatePassword(saveDto.password(), saveDto.confirmPassword());
         User oldUser = this.findOneEntityByUsername(username);
         UserMapper.updateEntity(oldUser, saveDto);
 

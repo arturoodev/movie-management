@@ -1,6 +1,7 @@
 package org.arturocode.moviemanagement.presentation.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.arturocode.moviemanagement.exception.ObjectNotFoundException;
 import org.arturocode.moviemanagement.presentation.dto.request.SaveMovie;
 import org.arturocode.moviemanagement.presentation.dto.response.GetMovie;
@@ -38,7 +39,7 @@ public class MovieController {
     }
 
     @PostMapping()
-    public ResponseEntity<GetMovie> createMovie(@RequestBody SaveMovie saveDto, HttpServletRequest request) {
+    public ResponseEntity<GetMovie> createMovie(@Valid @RequestBody SaveMovie saveDto, HttpServletRequest request) {
         try {
             GetMovie movieSaved = movieService.createOne(saveDto);
             String baseUrl = request.getRequestURL().toString();
@@ -51,7 +52,7 @@ public class MovieController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GetMovie> updateOne(@PathVariable Long id, @RequestBody SaveMovie saveDto) {
+    public ResponseEntity<GetMovie> updateOne(@Valid @PathVariable Long id, @RequestBody SaveMovie saveDto) {
         try {
             GetMovie movieSaved = movieService.updateOne(id, saveDto);
             return ResponseEntity.ok(movieSaved);
