@@ -56,8 +56,7 @@ public class MovieServiceImpl implements MovieService {
     @Transactional(readOnly = true)
     private Movie finOneEntityById(Long id) {
         return movieRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "Movie not found" + id));
-        //.orElseThrow(() -> new ObjectNotFoundException("[movie: " + Long.toString(id) + "]"));
+                .orElseThrow(() -> new ObjectNotFoundException("[movie: " + Long.toString(id) + "]"));
     }
 
     @Override
