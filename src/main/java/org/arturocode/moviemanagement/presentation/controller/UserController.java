@@ -28,39 +28,28 @@ public class UserController {
 
     @GetMapping("/{username}")
     public ResponseEntity<GetUser> getOneUserById(@PathVariable String username) {
-            return ResponseEntity.ok(userService.findOneByUsername(username));
+        return ResponseEntity.ok(userService.findOneByUsername(username));
     }
 
     @PostMapping
     public ResponseEntity<GetUser> createUser(@Valid @RequestBody SaveUser saveDto, HttpServletRequest request) {
-        try {
-            GetUser userSaved = userService.createOne(saveDto);
-            String baseUrl = request.getHttpServletMapping().toString();
-            URI uri = URI.create(baseUrl + "/" + userSaved.username());
-            return ResponseEntity.created(uri).body(userSaved);
-        } catch (ObjectNotFoundException exception) {
-            return ResponseEntity.notFound().build();
-        }
+        GetUser userSaved = userService.createOne(saveDto);
+        String baseUrl = request.getHttpServletMapping().toString();
+        URI uri = URI.create(baseUrl + "/" + userSaved.username());
+        return ResponseEntity.created(uri).body(userSaved);
     }
+
 
     @PutMapping("/{username}")
     public ResponseEntity<GetUser> updateUser(@Valid @RequestBody SaveUser saveDto, @PathVariable String username) {
-        try {
-            GetUser userSaved = userService.updateOneByUsername(username, saveDto);
-            return ResponseEntity.ok(userSaved);
-        } catch (ObjectNotFoundException exception) {
-            return ResponseEntity.notFound().build();
-        }
+        GetUser userSaved = userService.updateOneByUsername(username, saveDto);
+        return ResponseEntity.ok(userSaved);
     }
 
     @Transactional
     @DeleteMapping
     public ResponseEntity<Void> deleteUser(@PathVariable String username) {
-        try {
-            userService.deleteOneByUsername(username);
-            return ResponseEntity.noContent().build();
-        } catch (ObjectNotFoundException exception) {
-            return ResponseEntity.notFound().build();
-        }
+        userService.deleteOneByUsername(username);
+        return ResponseEntity.noContent().build();
     }
 }
